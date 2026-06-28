@@ -1,0 +1,17 @@
+streamlit==1.58.0
+streamlit-folium==0.27.2
+streamlit-option-menu==0.4.0
+
+folium==0.20.0
+branca==0.8.2
+
+geopandas==1.1.3
+pandas==3.0.3
+numpy==2.4.6
+plotly==6.8.0
+
+shapely==2.1.2
+pyproj==3.7.2
+pyogrio==0.12.1
+
+xyzservices==2026.3.0

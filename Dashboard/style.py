@@ -199,7 +199,6 @@ background:rgba(255,255,255,.22);
 
 transform:translateY(-4px);
 
-}            
-
+}              
     </style>
     """, unsafe_allow_html=True)

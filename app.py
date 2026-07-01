@@ -8,7 +8,7 @@ from Dashboard.sidebar import sidebar_filter
 from Dashboard.cards import tampilkan_cards
 from Dashboard.map_view import tampilkan_peta
 from Dashboard.ranking import tampilkan_ranking
-from Dashboard.insight import tampilkan_insight
+#from Dashboard.insight import tampilkan_insight
 from Dashboard.charts import tampilkan_chart
 from Dashboard.legend import tampilkan_legend
 from Dashboard.header import tampilkan_header
@@ -123,7 +123,7 @@ elif selected == "Ranking":
 # INSIGHT
 # ===============================
 
-tampilkan_insight(
-    gdf_tampil,
-    kecamatan_pilih
-)
+#tampilkan_insight(
+#   gdf_tampil,
+#   kecamatan_pilih
+#)

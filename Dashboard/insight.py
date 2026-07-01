@@ -33,18 +33,6 @@ def tampilkan_insight(gdf_tampil, kecamatan_pilih):
 🏘️ Jumlah Kecamatan : **{gdf_tampil['Kecamatan'].nunique()}**
 """)
 
-        st.info(f"""
-### 📌 Kesimpulan
-
-Berdasarkan hasil analisis spasial,
-**Kecamatan {terbaik}**
-memiliki rata-rata skor potensi tertinggi.
-
-Wilayah ini direkomendasikan
-sebagai lokasi prioritas
-pengembangan coffee shop.
-""")
-
     # ==========================
     # Kecamatan tertentu
     # ==========================

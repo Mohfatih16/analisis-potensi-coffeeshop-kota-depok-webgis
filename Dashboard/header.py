@@ -6,7 +6,7 @@ def tampilkan_header():
 <div class="hero">
 
 <div class="hero-title">
-☕ WebGIS Analisis Potensi Coffee Shop Kota Depok
+Analisis Potensi Coffee Shop Kota Depok
 </div>
 
 <div class="hero-subtitle">

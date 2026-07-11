@@ -10,7 +10,6 @@ from Dashboard.map_view import tampilkan_peta
 from Dashboard.ranking import tampilkan_ranking
 #from Dashboard.insight import tampilkan_insight
 from Dashboard.charts import tampilkan_chart
-from Dashboard.legend import tampilkan_legend
 from Dashboard.header import tampilkan_header
 
 st.set_page_config(
@@ -90,34 +89,7 @@ selected = option_menu(
 # ===============================
 
 if selected == "Peta":
-
-    col1, col2 = st.columns(
-        [4,1]
-    )
-
-    with col1:
-
-        tampilkan_peta(
-            gdf_tampil,
-            kategori_peta,
-            adm
-        )
-
-    with col2:
-
-        tampilkan_legend()
-
-elif selected == "Statistik":
-
-    tampilkan_chart(
-        gdf_tampil
-    )
-
-elif selected == "Ranking":
-
-    tampilkan_ranking(
-        gdf_tampil
-    )
+    tampilkan_peta(gdf_tampil, kategori_peta, adm)
 
 # ===============================
 # INSIGHT

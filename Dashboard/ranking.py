@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 
 
 def tampilkan_ranking(gdf_tampil):
@@ -56,7 +55,7 @@ def tampilkan_ranking(gdf_tampil):
         nama_kolom = "Kompetitor Coffee Shop"
 
     # ==================================================
-    # MEMBUAT RANKING
+    # MEMBUAT RANKING SEMUA KECAMATAN
     # ==================================================
 
     ranking = (
@@ -67,7 +66,38 @@ def tampilkan_ranking(gdf_tampil):
             by=kolom,
             ascending=False
         )
+        .reset_index(drop=True)
     )
+
+    # ==================================================
+    # MEMBUAT KATEGORI (SEBELUM SEARCH)
+    # ==================================================
+
+    q1 = ranking[kolom].quantile(0.25)
+    q2 = ranking[kolom].quantile(0.50)
+    q3 = ranking[kolom].quantile(0.75)
+
+    kategori = []
+
+    for nilai in ranking[kolom]:
+
+        if nilai >= q3:
+
+            kategori.append("🔴 Sangat Potensial")
+
+        elif nilai >= q2:
+
+            kategori.append("🟠 Potensial")
+
+        elif nilai >= q1:
+
+            kategori.append("🟡 Sedang")
+
+        else:
+
+            kategori.append("⚪ Rendah")
+
+    ranking["Kategori"] = kategori
 
     # ==================================================
     # SEARCH
@@ -82,7 +112,7 @@ def tampilkan_ranking(gdf_tampil):
                 case=False,
                 na=False
             )
-        ]
+        ].reset_index(drop=True)
 
     # ==================================================
     # MEMBUAT RANK
@@ -109,36 +139,6 @@ def tampilkan_ranking(gdf_tampil):
         "Rank",
         rank
     )
-
-    # ==================================================
-    # MEMBUAT KATEGORI
-    # ==================================================
-
-    q1 = ranking[kolom].quantile(0.25)
-    q2 = ranking[kolom].quantile(0.50)
-    q3 = ranking[kolom].quantile(0.75)
-
-    kategori = []
-
-    for nilai in ranking[kolom]:
-
-        if nilai >= q3:
-
-            kategori.append("🔴 Sangat Potenisial")
-
-        elif nilai >= q2:
-
-            kategori.append("🟠 Potensial")
-
-        elif nilai >= q1:
-
-            kategori.append("🟡 Sedang")
-
-        else:
-
-            kategori.append("⚪ Rendah")
-
-    ranking["Kategori"] = kategori
 
     # ==================================================
     # FORMAT ANGKA
@@ -168,7 +168,8 @@ def tampilkan_ranking(gdf_tampil):
         "📥 Download Ranking",
         csv,
         "Ranking_Kecamatan.csv",
-        "text/csv"
+        "text/csv",
+        use_container_width=True
     )
 
     # ==================================================

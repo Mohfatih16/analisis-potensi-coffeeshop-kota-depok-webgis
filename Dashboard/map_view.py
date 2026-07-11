@@ -732,7 +732,10 @@ def tampilkan_peta(gdf_tampil, kategori_peta, adm):
     ).add_to(m)
 
     xmin, ymin, xmax, ymax = adm.total_bounds
-    home_bounds = [[ymin, xmin], [ymax, xmax]]
+    home_bounds = [
+        [float(ymin), float(xmin)],
+        [float(ymax), float(xmax)]
+    ]
 
     HomeButton(home_bounds).add_to(m)
 

@@ -18,15 +18,21 @@ def load_css():
     .block-container,
     [data-testid="stMainBlockContainer"],
     [data-testid="stAppViewBlockContainer"],
+    [data-testid*="MainBlockContainer"],
+    [data-testid*="AppViewBlockContainer"],
+    [class*="block-container"],
     section[data-testid="stMain"] > div{
         max-width:100% !important;
-        padding-left:2rem !important;
-        padding-right:2rem !important;
+        width:100% !important;
+        padding-left:0.6rem !important;
+        padding-right:0.6rem !important;
         padding-top:1.5rem !important;
     }
 
     [data-testid="stAppViewContainer"],
-    [data-testid="stMain"]{
+    [data-testid="stMain"],
+    section[data-testid="stMain"],
+    [data-testid*="AppViewContainer"]{
         max-width:100% !important;
         width:100% !important;
     }
@@ -79,7 +85,9 @@ border:1px solid #EAEAEA;
 
 transition:.3s;
 
-height:185px;
+min-height:185px;
+
+margin-bottom:10px;
 
 }
 
@@ -233,6 +241,53 @@ background:rgba(255,255,255,.22);
 
 transform:translateY(-4px);
 
-}              
+}
+
+/* ========================= */
+/* MENU HORIZONTAL (native st.button) */
+/* ========================= */
+
+.st-key-menu_bar{
+    background:#F3ECE5;
+    padding:14px 12px;
+    border-radius:12px;
+    margin:15px 0px 25px 0px;
+}
+
+.st-key-menu_bar .stButton > button{
+    width:100%;
+    background:transparent;
+    border:none;
+    color:#5B3A29;
+    font-weight:600;
+    font-size:17px;
+    border-radius:10px;
+    padding:10px 18px;
+    transition:.2s;
+    box-shadow:none;
+}
+
+.st-key-menu_bar .stButton > button:hover{
+    background:rgba(139,94,60,0.15);
+    color:#5B3A29;
+    border:none;
+}
+
+.st-key-menu_bar .stButton > button:focus:not(:active){
+    color:#5B3A29;
+    border:none;
+    box-shadow:none;
+}
+
+.st-key-menu_bar .stButton > button[kind="primary"]{
+    background:#8B5E3C !important;
+    color:white !important;
+    border:none !important;
+}
+
+.st-key-menu_bar .stButton > button[kind="primary"]:hover{
+    background:#7B4F2B !important;
+    color:white !important;
+}
     </style>
     """, unsafe_allow_html=True)

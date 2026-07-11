@@ -1,7 +1,5 @@
 import streamlit as st
 
-from streamlit_option_menu import option_menu
-
 from Dashboard.loader import load_data
 from Dashboard.style import load_css
 from Dashboard.sidebar import sidebar_filter
@@ -30,74 +28,62 @@ tampilkan_header()
 # ===============================
 st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
 tampilkan_cards(gdf_tampil)
-st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
+st.markdown("<div style='height:55px'></div>", unsafe_allow_html=True)
 # ===============================
 # MENU HORIZONTAL
 # ===============================
+# Pakai st.button native (bukan streamlit-option-menu) supaya tampilannya
+# bisa dikontrol penuh lewat CSS di style.py (termasuk full width, tanpa
+# celah kosong di kanan) dan tidak terkendala iframe komponen pihak ketiga.
 
-selected = option_menu(
-    menu_title=None,
+if "menu_aktif" not in st.session_state:
+    st.session_state.menu_aktif = "Peta"
 
-    options=[
-        "Peta",
-        "Statistik",
-        "Ranking"
-    ],
+menu_items = [
+    ("Peta", "🗺️"),
+    ("Statistik", "📊"),
+    ("Ranking", "🏆")
+]
 
-    icons=[
-        "map",
-        "bar-chart",
-        "trophy"
-    ],
+with st.container(key="menu_bar"):
 
-    default_index=0,
+    c1, c2, c3 = st.columns(3)
 
-    orientation="horizontal",
+    for col, (label, icon) in zip([c1, c2, c3], menu_items):
 
-    styles={
+        with col:
 
-        "container":{
+            aktif = st.session_state.menu_aktif == label
 
-        "padding":"12px",
+            if st.button(
+                f"{icon}  {label}",
+                key=f"menu_{label}",
+                type="primary" if aktif else "secondary",
+                width="stretch"
+            ):
+                st.session_state.menu_aktif = label
+                st.rerun()
 
-        "margin":"15px 0px 25px 0px",
-
-        "background-color":"#F3ECE5",
-
-        "border-radius":"12px"
-
-    },
-
-        "nav-link":{
-            "font-size":"18px",
-            "font-weight":"600",
-            "text-align":"center",
-            "color":"#5B3A29"
-        },
-
-        "nav-link-selected":{
-            "background-color":"#8B5E3C",
-            "color":"white",
-            "border-radius":"10px"
-        }
-
-    }
-)
+selected = st.session_state.menu_aktif
 
 # ===============================
 # KONTEN
 # ===============================
 
 if selected == "Peta":
-    col1, col2 = st.columns([4,1])
-    with col1:
-        tampilkan_peta(gdf_tampil, kategori_peta, adm)
+
+    tampilkan_peta(
+        gdf_tampil,
+        kategori_peta,
+        adm
+    )
 
 elif selected == "Statistik":
 
     tampilkan_chart(
         gdf_tampil,
-         df_penduduk 
+        df_penduduk,
+        kecamatan_pilih
     )
 
 elif selected == "Ranking":

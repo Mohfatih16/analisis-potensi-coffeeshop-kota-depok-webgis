@@ -172,10 +172,55 @@ class MapUIEnhancements(MacroElement):
         .leaflet-bottom.leaflet-left .map-legend-control{ order:1; margin-bottom:0 !important; }
         .leaflet-bottom.leaflet-left .leaflet-control-scale{ order:2; margin-bottom:0 !important; }
         .leaflet-bottom.leaflet-left .leaflet-control-mouseposition{ order:3; margin-bottom:0 !important; }
+
+        /* ---- Jaga-jaga: hilangkan celah kosong di kanan peta ----
+           (panel float-child kedua yang tidak dipakai dari
+           streamlit-folium, kalau masih tersisa) */
+        .float-container.single{
+            width:100% !important;
+        }
+        .float-container.single > .float-child:first-child{
+            width:100% !important;
+        }
+        .float-container.single > .float-child:first-child ~ .float-child{
+            display:none !important;
+            width:0 !important;
+        }
     </style>
     {% endmacro %}
 
     {% macro script(this, kwargs) %}
+
+        // ---- Hilangkan panel "float-child" kedua yang kosong ----
+        // (bawaan streamlit-folium, tidak dipakai) yang menyisakan
+        // celah kosong di sebelah kanan peta. Ditangani langsung lewat
+        // JS (bukan cuma CSS) supaya pasti kena, tidak tergantung
+        // prioritas/urutan CSS.
+        (function () {
+            function beresinFloatChild() {
+                document.querySelectorAll('.float-container.single').forEach(function (fc) {
+                    fc.style.width = '100%';
+                    fc.style.maxWidth = '100%';
+
+                    var anak = fc.querySelectorAll(':scope > .float-child');
+
+                    anak.forEach(function (el, idx) {
+                        if (idx === 0) {
+                            el.style.width = '100%';
+                            el.style.maxWidth = '100%';
+                        } else {
+                            el.style.display = 'none';
+                            el.style.width = '0px';
+                        }
+                    });
+                });
+            }
+
+            beresinFloatChild();
+            setTimeout(beresinFloatChild, 300);
+            setTimeout(beresinFloatChild, 1000);
+        })();
+
         {{ this._parent.get_name() }}.whenReady(function () {
             var peta_{{ this.get_name() }} = {{ this._parent.get_name() }};
 
@@ -1050,5 +1095,12 @@ def tampilkan_peta(gdf_tampil, kategori_peta, adm):
         m,
         width=None,
         height=650,
-        use_container_width=True
+        use_container_width=True,
+        returned_objects=[]
+        # returned_objects=[] -> kita tidak memakai nilai balikan
+        # (klik, bounds, dll) dari peta ini di kode manapun, jadi
+        # mekanisme penangkap data balik itu dimatikan. Ini juga
+        # yang menghilangkan panel tersembunyi kosong di sebelah
+        # kanan peta yang tadi ikut memakan lebar (terlihat sebagai
+        # <div class="float-child"> kedua yang kosong di DevTools).
     )

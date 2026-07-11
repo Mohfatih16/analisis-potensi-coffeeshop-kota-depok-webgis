@@ -4,8 +4,6 @@ from folium.plugins import (
     Fullscreen,
     LocateControl,
     MiniMap,
-    MeasureControl,
-    Geocoder,
     MousePosition,
 )
 from streamlit_folium import st_folium
@@ -36,9 +34,7 @@ class MapUIEnhancements(MacroElement):
         .north-arrow-control,
         .map-legend-control,
         .gis-layer-panel-control,
-        .gis-attribution-control,
-        .leaflet-control-measure,
-        .leaflet-control-geocoder{
+        .gis-attribution-control{
             z-index:999998 !important;
         }
         .leaflet-container:fullscreen,
@@ -134,6 +130,48 @@ class MapUIEnhancements(MacroElement):
             color:#5B3A29;
             font-family:Arial, sans-serif;
         }
+
+        /* ---- Skala batang (scale bar) - diperbesar & diberi gaya kartu senada ---- */
+        .leaflet-control-scale{
+            background:rgba(255,255,255,0.9);
+            padding:6px 10px;
+            border-radius:8px;
+            box-shadow:0 1px 6px rgba(0,0,0,0.2);
+            font-family:Arial, sans-serif;
+        }
+        .leaflet-control-scale-line{
+            border:3px solid #5B3A29 !important;
+            border-top:none !important;
+            color:#5B3A29 !important;
+            font-size:14px !important;
+            font-weight:700 !important;
+            background:transparent !important;
+            padding:0 4px 2px !important;
+            height:16px !important;
+        }
+
+        /* ---- Urutan kontrol pojok kanan atas ----
+           Panel Layers di atas, kompas (arah mata angin) di bawahnya. */
+        .leaflet-top.leaflet-right{
+            display:flex;
+            flex-direction:column;
+            align-items:flex-end;
+            gap:10px;
+        }
+        .leaflet-top.leaflet-right .gis-layer-panel-control{ order:1; margin-top:0 !important; }
+        .leaflet-top.leaflet-right .north-arrow-control{ order:2; margin-top:0 !important; }
+
+        /* ---- Urutan kontrol pojok kiri bawah ----
+           Legenda paling atas, lalu skala batang, lalu kotak koordinat paling bawah. */
+        .leaflet-bottom.leaflet-left{
+            display:flex;
+            flex-direction:column;
+            align-items:flex-start;
+            gap:8px;
+        }
+        .leaflet-bottom.leaflet-left .map-legend-control{ order:1; margin-bottom:0 !important; }
+        .leaflet-bottom.leaflet-left .leaflet-control-scale{ order:2; margin-bottom:0 !important; }
+        .leaflet-bottom.leaflet-left .leaflet-control-mouseposition{ order:3; margin-bottom:0 !important; }
     </style>
     {% endmacro %}
 
@@ -269,6 +307,92 @@ class HomeButton(MacroElement):
 
 
 # ==========================================================
+# CONTROL: PRINT PETA
+# ==========================================================
+# Menggantikan tombol "Measure distances and areas" (MeasureControl)
+# yang jarang dipakai, dengan tombol cetak peta. Memakai window.print()
+# bawaan browser (bukan library tambahan), supaya peta yang tercetak
+# adalah tampilan Leaflet apa adanya (termasuk basemap, grid warna,
+# legenda, dsb) tanpa masalah CORS seperti kalau export ke gambar.
+
+class PrintButton(MacroElement):
+    _template = Template("""
+    {% macro script(this, kwargs) %}
+
+    var print_{{ this.get_name() }} = L.control({
+        position: 'topleft'
+    });
+
+    print_{{ this.get_name() }}.onAdd = function(map){
+
+        var div = L.DomUtil.create(
+            'div',
+            'leaflet-bar leaflet-control'
+        );
+
+        div.innerHTML = `
+        <a href="#"
+           title="Print Peta"
+           style="
+                width:30px;
+                height:30px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                text-decoration:none;
+                background:white;
+           ">
+           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <path d="M6 9V2H18V9" stroke="#5B3A29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+               <path d="M6 18H4C3.44772 18 3 17.5523 3 17V11C3 9.89543 3.89543 9 5 9H19C20.1046 9 21 9.89543 21 11V17C21 17.5523 20.5523 18 20 18H18" stroke="#5B3A29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+               <rect x="6" y="14" width="12" height="8" stroke="#5B3A29" stroke-width="2" stroke-linejoin="round"/>
+           </svg>
+        </a>
+        `;
+
+        div.onclick = function(){
+
+            window.print();
+
+            return false;
+
+        };
+
+        L.DomEvent.disableClickPropagation(div);
+
+        return div;
+
+    };
+
+    print_{{ this.get_name() }}.addTo({{this._parent.get_name()}});
+
+    {% endmacro %}
+    """)
+
+
+# ==========================================================
+# CONTROL: SKALA BATANG (UKURAN LEBIH BESAR)
+# ==========================================================
+# Menggantikan control_scale bawaan folium (ukurannya kecil & tidak
+# bisa diatur dari folium.Map). Di sini pakai L.control.scale() Leaflet
+# langsung dengan maxWidth lebih besar, supaya batang skalanya lebih
+# panjang/besar. Gaya visualnya (tebal garis, ukuran teks) diatur lewat
+# CSS .leaflet-control-scale-line di MapUIEnhancements.
+
+class ScaleBarBesar(MacroElement):
+    _template = Template("""
+    {% macro script(this, kwargs) %}
+        L.control.scale({
+            position: 'bottomleft',
+            maxWidth: 160,
+            metric: true,
+            imperial: true
+        }).addTo({{ this._parent.get_name() }});
+    {% endmacro %}
+    """)
+
+
+# ==========================================================
 # CONTROL: LEGENDA DI DALAM PETA (collapsible)
 # ==========================================================
 # Legenda dibuat sebagai Leaflet Control (bukan elemen Streamlit di luar peta),
@@ -288,22 +412,25 @@ class MapLegend(MacroElement):
                 var div = L.DomUtil.create('div', 'map-legend-control');
                 div.innerHTML = `
                     <div style="
-                        background:rgba(255,255,255,0.95);
-                        padding:12px 14px;
-                        border-radius:12px;
-                        box-shadow:0 2px 10px rgba(0,0,0,0.25);
+                        background:rgba(255,255,255,0.97);
+                        padding:14px 16px;
+                        border-radius:14px;
+                        border:1px solid rgba(91,58,41,0.08);
+                        box-shadow:0 4px 16px rgba(0,0,0,0.18);
                         font-family:Arial, sans-serif;
-                        min-width:180px;
+                        min-width:205px;
                     ">
                         <div class="gis-legend-head" style="
                             display:flex;align-items:center;
                             justify-content:space-between;gap:10px;
                             cursor:pointer;
+                            padding-bottom:8px;
+                            border-bottom:2px solid #F3ECE5;
                         ">
-                            <span style="font-weight:700;font-size:13px;color:#5B3A29;">""" + self._judul + """</span>
+                            <span style="font-weight:700;font-size:13.5px;color:#5B3A29;letter-spacing:.01em;">""" + self._judul + """</span>
                             <span class="gis-legend-caret" style="font-size:11px;color:#8B5E3C;">&#9660;</span>
                         </div>
-                        <div class="gis-legend-body" style="margin-top:8px;">
+                        <div class="gis-legend-body" style="margin-top:6px;">
                             """ + self._baris + """
                         </div>
                     </div>
@@ -478,15 +605,24 @@ def _buat_baris_legenda(bins):
 
     for warna, label, rentang in bins:
         baris += f"""
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <div style="
+            display:flex;align-items:center;gap:10px;
+            padding:9px 10px;
+            margin-bottom:6px;
+            border-radius:8px;
+            border-left:4px solid {warna};
+            background:{warna}17;
+        ">
             <span style="
-                width:16px;height:16px;border-radius:4px;
+                width:14px;height:14px;border-radius:50%;
                 background:{warna};display:inline-block;
                 border:1px solid rgba(0,0,0,0.15);
+                box-shadow:0 1px 3px rgba(0,0,0,0.2);
                 flex-shrink:0;
             "></span>
-            <span style="font-size:12px;color:#333;">
-                <b>{label}</b><br>{rentang}
+            <span style="line-height:1.4;">
+                <span style="font-size:12.5px;font-weight:700;color:#3D2A1F;display:block;">{label}</span>
+                <span style="font-size:11px;color:#8B7768;">{rentang}</span>
             </span>
         </div>
         """
@@ -562,7 +698,7 @@ def tampilkan_peta(gdf_tampil, kategori_peta, adm):
         location=[-6.39, 106.82],
         zoom_start=11,
         tiles=None,
-        control_scale=True  # -> mengaktifkan skala batang (scale bar) bawaan Leaflet
+        control_scale=False  # -> diganti ScaleBarBesar kustom di bawah (ukuran bisa diatur)
     )
 
     # ======================================================
@@ -572,7 +708,7 @@ def tampilkan_peta(gdf_tampil, kategori_peta, adm):
     MapUIEnhancements().add_to(m)
 
     # ======================================================
-    # TOOLBAR KIRI ATAS: FULL SCREEN, PENCARIAN, UKUR, LOKASI, HOME
+    # TOOLBAR KIRI ATAS: FULL SCREEN, PRINT, LOKASI, HOME
     # (dikelompokkan seperti toolbar pada ArcGIS Online / QGIS Web)
     # ======================================================
 
@@ -583,20 +719,9 @@ def tampilkan_peta(gdf_tampil, kategori_peta, adm):
         force_separate_button=True
     ).add_to(m)
 
-    Geocoder(
-        position="topleft",
-        collapsed=True,
-        add_marker=True,
-        placeholder="Cari lokasi..."
-    ).add_to(m)
+    PrintButton().add_to(m)
 
-    MeasureControl(
-        position="topleft",
-        primary_length_unit="meters",
-        secondary_length_unit="kilometers",
-        primary_area_unit="sqmeters",
-        secondary_area_unit="hectares"
-    ).add_to(m)
+    ScaleBarBesar().add_to(m)
 
     LocateControl(
         auto_start=False,
@@ -921,5 +1046,6 @@ def tampilkan_peta(gdf_tampil, kategori_peta, adm):
     st_folium(
         m,
         width=None,
-        height=650
+        height=650,
+        use_container_width=True
     )

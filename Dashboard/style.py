@@ -6,6 +6,40 @@ def load_css():
     st.markdown("""
     <style>
 
+    /*=============================*/
+    /* FULL WIDTH LAYOUT           */
+    /*=============================*/
+    /* Streamlit tetap membatasi lebar maksimum kontainer utama walau
+       sudah pakai layout="wide". Selector class-nya sering berubah
+       antar versi Streamlit, jadi di sini beberapa selector sekaligus
+       ditarget (nama class lama + data-testid versi baru) supaya
+       pasti kena versi Streamlit yang mana pun. */
+
+    .block-container,
+    [data-testid="stMainBlockContainer"],
+    [data-testid="stAppViewBlockContainer"],
+    section[data-testid="stMain"] > div{
+        max-width:100% !important;
+        padding-left:2rem !important;
+        padding-right:2rem !important;
+        padding-top:1.5rem !important;
+    }
+
+    [data-testid="stAppViewContainer"],
+    [data-testid="stMain"]{
+        max-width:100% !important;
+        width:100% !important;
+    }
+
+    [data-testid="element-container"],
+    [data-testid="stElementContainer"],
+    [data-testid="stIFrame"],
+    [data-testid="stCustomComponentV1"],
+    iframe{
+        width:100% !important;
+        max-width:100% !important;
+    }
+
     .stApp{
         background:#F8F5F2;
     }

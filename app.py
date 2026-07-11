@@ -19,7 +19,7 @@ st.set_page_config(
 
 load_css()
 
-gdf, adm = load_data()
+gdf, adm, df_penduduk = load_data()
 
 gdf_tampil, kecamatan_pilih, kategori_peta = sidebar_filter(gdf)
 
@@ -96,7 +96,8 @@ if selected == "Peta":
 elif selected == "Statistik":
 
     tampilkan_chart(
-        gdf_tampil
+        gdf_tampil,
+         df_penduduk 
     )
 
 elif selected == "Ranking":

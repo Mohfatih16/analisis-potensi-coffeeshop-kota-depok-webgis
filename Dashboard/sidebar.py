@@ -7,8 +7,8 @@ def sidebar_filter(gdf):
     # HEADER
     # =====================================
 
-    st.sidebar.markdown("# ☕ Dashboard")
-    st.sidebar.caption("WebGIS Coffee Shop Kota Depok")
+    st.sidebar.markdown("Dashboard")
+    st.sidebar.caption("Sistem Informasi Geografis Analisis Potensi Coffee Shop Kota Depok")
 
     st.sidebar.divider()
 

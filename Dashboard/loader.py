@@ -1,4 +1,5 @@
 import geopandas as gpd
+import pandas as pd
 import streamlit as st
 
 
@@ -24,4 +25,13 @@ def load_data():
         "Data/Adm_Kota_Depok.geojson"
     )
 
-    return gdf, adm
+    # ==========================
+    # DATA KEPENDUDUKAN (BPS)
+    # ==========================
+
+    df_penduduk = pd.read_csv(
+        "Data/Data_Kepadatan_Depok.csv",
+        encoding="utf-8-sig"
+    )
+
+    return gdf, adm, df_penduduk

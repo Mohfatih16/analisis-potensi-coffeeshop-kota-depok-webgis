@@ -89,7 +89,21 @@ selected = option_menu(
 # ===============================
 
 if selected == "Peta":
-    tampilkan_peta(gdf_tampil, kategori_peta, adm)
+    col1, col2 = st.columns([4,1])
+    with col1:
+        tampilkan_peta(gdf_tampil, kategori_peta, adm)
+
+elif selected == "Statistik":
+
+    tampilkan_chart(
+        gdf_tampil
+    )
+
+elif selected == "Ranking":
+
+    tampilkan_ranking(
+        gdf_tampil
+    )
 
 # ===============================
 # INSIGHT

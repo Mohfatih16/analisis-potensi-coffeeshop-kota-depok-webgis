@@ -50,7 +50,7 @@ def sidebar_filter(gdf):
 
     st.sidebar.divider()
 
-    st.sidebar.subheader("📊 Informasi")
+    st.sidebar.subheader(" Informasi")
 
     st.sidebar.metric(
         "Jumlah Grid",

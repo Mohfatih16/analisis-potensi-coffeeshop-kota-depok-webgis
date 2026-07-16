@@ -15,16 +15,16 @@ WARNA_KATEGORI = {
 
 def tampilkan_ranking(gdf_tampil):
 
-    st.subheader("🏆 Ranking Kecamatan")
+    st.subheader("Ranking Kecamatan")
 
     # ==================================================
     # FILTER
     # ==================================================
 
     OPSI_TAMPILAN = [
-        "📊 Diagram Batang",
-        "🍩 Diagram Donut",
-        "📋 Tabel Data"
+        "Diagram Batang",
+        "Diagram Donut",
+        "Tabel Data"
     ]
 
     col1, col2 = st.columns([2, 1])
@@ -68,7 +68,7 @@ def tampilkan_ranking(gdf_tampil):
     jumlah_total = len(daftar_kecamatan)
 
     with st.popover(
-        f"📍 Filter Kecamatan ({jumlah_dipilih}/{jumlah_total})",
+        f" Filter Kecamatan ({jumlah_dipilih}/{jumlah_total})",
         use_container_width=True
     ):
 
@@ -241,9 +241,9 @@ def tampilkan_ranking(gdf_tampil):
     # supaya tampilan tidak penuh sesak kalau ketiganya sekaligus
     # tidak diperlukan.
 
-    tampil_bar = tampilan_dipilih == "📊 Diagram Batang"
-    tampil_donut = tampilan_dipilih == "🍩 Diagram Donut"
-    tampil_tabel = tampilan_dipilih == "📋 Tabel Data"
+    tampil_bar = tampilan_dipilih == "Diagram Batang"
+    tampil_donut = tampilan_dipilih == "Diagram Donut"
+    tampil_tabel = tampilan_dipilih == "Tabel Data"
 
     # ==================================================
     # DIAGRAM RANKING & DISTRIBUSI KATEGORI
@@ -251,7 +251,7 @@ def tampilkan_ranking(gdf_tampil):
 
     if tampil_bar or tampil_donut:
 
-        st.markdown("### 📊 Visualisasi Ranking")
+        st.markdown("Visualisasi Ranking")
 
         col_bar = st.container() if tampil_bar else None
         col_donut = st.container() if tampil_donut else None
@@ -261,7 +261,7 @@ def tampilkan_ranking(gdf_tampil):
 
             with col_bar:
 
-                st.markdown(f"##### Ranking Kecamatan Berdasarkan {nama_kolom}")
+                st.markdown(f"Ranking Kecamatan Berdasarkan {nama_kolom}")
 
                 fig_bar = px.bar(
                     ranking.sort_values(by=nama_kolom),
@@ -340,7 +340,7 @@ def tampilkan_ranking(gdf_tampil):
 
     if tampil_tabel:
 
-        st.markdown("### 📋 Tabel Data Ranking")
+        st.markdown("Tabel Data Ranking")
 
         tinggi_tabel = min(38 * (len(ranking) + 1) + 3, 600)
 
@@ -364,7 +364,7 @@ def tampilkan_ranking(gdf_tampil):
     csv = ranking.to_csv(index=False)
 
     st.download_button(
-        "📥 Download Ranking",
+        "Download Ranking",
         csv,
         "Ranking_Kecamatan.csv",
         "text/csv",

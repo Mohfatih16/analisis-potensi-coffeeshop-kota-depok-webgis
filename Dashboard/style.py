@@ -7,6 +7,23 @@ def load_css():
     <style>
 
     /*=============================*/
+    /* GOOGLE FONT                 */
+    /*=============================*/
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+    html, body, [class*="css"], .stApp, p, span, div, li, label{
+        font-family:'Inter', sans-serif;
+    }
+
+    h1,h2,h3,
+    .hero-title,
+    .metric-value,
+    .metric-header{
+        font-family:'Poppins', sans-serif !important;
+    }
+
+    /*=============================*/
     /* FULL WIDTH LAYOUT           */
     /*=============================*/
     /* Streamlit tetap membatasi lebar maksimum kontainer utama walau
@@ -169,7 +186,16 @@ color:#777;
 
 background:linear-gradient(135deg,#7B4F2B,#A97142);
 
-padding:30px;
+background-image:
+    radial-gradient(circle at 92% 15%, rgba(255,255,255,.10) 0, rgba(255,255,255,.10) 60px, transparent 61px),
+    radial-gradient(circle at 98% 55%, rgba(255,255,255,.08) 0, rgba(255,255,255,.08) 90px, transparent 91px),
+    radial-gradient(circle at 80% 90%, rgba(255,255,255,.06) 0, rgba(255,255,255,.06) 50px, transparent 51px),
+    linear-gradient(135deg,#7B4F2B,#A97142);
+
+background-repeat:no-repeat;
+background-size:cover;
+
+padding:34px 36px;
 
 border-radius:20px;
 
@@ -177,6 +203,20 @@ margin-bottom:30px;
 
 box-shadow:0 8px 25px rgba(0,0,0,.15);
 
+position:relative;
+overflow:hidden;
+
+}
+
+.hero::after{
+    content:"☕";
+    position:absolute;
+    right:-10px;
+    bottom:-35px;
+    font-size:150px;
+    opacity:.08;
+    transform:rotate(-15deg);
+    pointer-events:none;
 }
 
 .hero-title{
@@ -289,5 +329,178 @@ transform:translateY(-4px);
     background:#7B4F2B !important;
     color:white !important;
 }
+
+/* ========================= */
+/* FADE-IN ANIMATION         */
+/* ========================= */
+
+@keyframes fadeInUp{
+    from{
+        opacity:0;
+        transform:translateY(14px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.hero,
+.metric-card,
+[data-testid="stTabs"],
+[data-testid="stDataFrame"],
+.footer-app{
+    animation:fadeInUp .5s ease-out;
+}
+
+/* ========================= */
+/* SIDEBAR STYLING           */
+/* ========================= */
+
+section[data-testid="stSidebar"] .stSelectbox > div > div,
+section[data-testid="stSidebar"] [data-baseweb="select"] > div{
+    background:white !important;
+    border-radius:10px !important;
+    border:1px solid #E0D2C3 !important;
+}
+
+section[data-testid="stSidebar"] [data-testid="stMetric"]{
+    background:white;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid #E0D2C3;
+    margin-bottom:8px;
+}
+
+section[data-testid="stSidebar"] [data-testid="stMetricValue"]{
+    color:#8B5E3C;
+}
+
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3{
+    color:#5B3A29 !important;
+}
+
+section[data-testid="stSidebar"] [data-testid="stAlert"]{
+    background:rgba(139,94,60,.08);
+    border-radius:12px;
+    border:1px solid #E0D2C3;
+}
+
+/* ========================= */
+/* FOOTER                    */
+/* ========================= */
+
+.footer-app{
+    margin-top:45px;
+    padding:26px 30px;
+    background:linear-gradient(135deg,#5B3A29,#7B4F2B);
+    border-radius:18px;
+    color:white;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+}
+
+.footer-app .footer-title{
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    font-size:18px;
+    margin-bottom:6px;
+}
+
+.footer-app .footer-sub{
+    opacity:.85;
+    font-size:14px;
+    margin-bottom:14px;
+}
+
+.footer-app .footer-divider{
+    width:60px;
+    height:3px;
+    background:rgba(255,255,255,.4);
+    margin:0 auto 14px auto;
+    border-radius:10px;
+}
+
+.footer-app .footer-tags{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+}
+
+.footer-app .footer-tag{
+    background:rgba(255,255,255,.12);
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+.footer-app .footer-copy{
+    font-size:12.5px;
+    opacity:.7;
+}
+
+/* ========================= */
+/* HALAMAN TENTANG           */
+/* ========================= */
+
+.tentang-card{
+    background:white;
+    padding:22px;
+    border-radius:16px;
+    box-shadow:0 6px 16px rgba(0,0,0,.06);
+    border:1px solid #EAEAEA;
+    height:100%;
+    transition:.3s;
+}
+
+.tentang-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 22px rgba(0,0,0,.12);
+}
+
+.tentang-card .icon{
+    font-size:30px;
+    margin-bottom:10px;
+}
+
+.tentang-card h4{
+    color:#5B3A29;
+    margin-bottom:8px;
+    font-family:'Poppins', sans-serif;
+}
+
+.tentang-card p{
+    color:#555;
+    font-size:14.5px;
+    line-height:1.55;
+}
+
+/* ========================= */
+/* EXPANDER FILTER KECAMATAN */
+/* ========================= */
+
+[data-testid="stExpander"]{
+    background:white;
+    border-radius:12px !important;
+    border:1px solid #E0D2C3 !important;
+    overflow:visible !important;
+}
+
+[data-testid="stExpander"] summary{
+    border-radius:12px !important;
+    font-weight:600;
+    color:#5B3A29;
+}
+
+/* Dropdown listbox multiselect (portal BaseWeb) supaya tidak
+   terpotong dan cukup tinggi saat menampilkan banyak pilihan. */
+[data-baseweb="popover"] [role="listbox"]{
+    max-height:320px !important;
+}
+
     </style>
     """, unsafe_allow_html=True)

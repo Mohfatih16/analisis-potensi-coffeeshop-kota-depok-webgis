@@ -15,7 +15,7 @@ WARNA_KATEGORI = {
 
 def tampilkan_ranking(gdf_tampil):
 
-    st.subheader("Ranking Kecamatan")
+    st.subheader("🏆 Ranking Kecamatan")
 
     # ==================================================
     # FILTER
@@ -67,9 +67,9 @@ def tampilkan_ranking(gdf_tampil):
     jumlah_dipilih = len(st.session_state.ranking_kecamatan_filter)
     jumlah_total = len(daftar_kecamatan)
 
-    with st.popover(
+    with st.expander(
         f" Filter Kecamatan ({jumlah_dipilih}/{jumlah_total})",
-        use_container_width=True
+        expanded=False
     ):
 
         btn_col1, btn_col2 = st.columns(2)
@@ -251,7 +251,7 @@ def tampilkan_ranking(gdf_tampil):
 
     if tampil_bar or tampil_donut:
 
-        st.markdown("Visualisasi Ranking")
+        st.markdown("###  Visualisasi Ranking")
 
         col_bar = st.container() if tampil_bar else None
         col_donut = st.container() if tampil_donut else None
@@ -261,7 +261,7 @@ def tampilkan_ranking(gdf_tampil):
 
             with col_bar:
 
-                st.markdown(f"Ranking Kecamatan Berdasarkan {nama_kolom}")
+                st.markdown(f"##### Ranking Kecamatan Berdasarkan {nama_kolom}")
 
                 fig_bar = px.bar(
                     ranking.sort_values(by=nama_kolom),
